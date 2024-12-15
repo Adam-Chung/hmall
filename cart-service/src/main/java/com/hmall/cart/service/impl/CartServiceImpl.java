@@ -7,17 +7,15 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmall.api.client.ItemClient;
+import com.hmall.api.dto.ItemDTO;
 import com.hmall.cart.domain.dto.CartFormDTO;
-import com.hmall.cart.domain.dto.ItemDTO;
 import com.hmall.cart.domain.po.Cart;
 import com.hmall.cart.domain.vo.CartVO;
 import com.hmall.cart.mapper.CartMapper;
@@ -47,6 +45,10 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
     // public CartServiceImpl(RestTemplate restTemplate) {
     //     this.restTemplate = restTemplate;
     // }
+
+    private final DiscoveryClient discoveryClient;
+
+    private final ItemClient itemClient;
 
 
     @Override
@@ -94,21 +96,33 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
         // 1.获取商品id
         Set<Long> itemIds = vos.stream().map(CartVO::getItemId).collect(Collectors.toSet());
         // 2.查询商品
-        // List<ItemDTO> items = itemService.queryItemByIds(itemIds);
 
-        ResponseEntity<List<ItemDTO>> response = restTemplate.exchange(
-                "http://localhost:8081/items?ids={ids}",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<ItemDTO>>() {
-                },
-                Map.of("ids", StrUtil.join(",", itemIds))            
-        );
+        // // 2.1.根據服務名稱，拉取服務的實例清單
+        // List<ServiceInstance> instances = discoveryClient.getInstances("item-service");
+        // if (CollUtils.isEmpty(instances)) {
+        //     return;
+        // }
+        // // 2.2.負載均衡，挑選一個實例(以下是隨機)
+        // ServiceInstance instance = instances.get(RandomUtil.randomInt(instances.size()));
+        // // 2.3.獲取實例的IP和埠
+        // URI uri = instance.getUri();
+        
+        // ResponseEntity<List<ItemDTO>> response = restTemplate.exchange(
+        //     uri + "/items?ids={ids}",
+        //     HttpMethod.GET,
+        //     null,
+        //     new ParameterizedTypeReference<List<ItemDTO>>() {
+        //     },
+        //     Map.of("ids", StrUtil.join(",", itemIds))            
+        // );
 
-        if(response.getStatusCode().isError()){
-            return;
-        }
-        List<ItemDTO> items = response.getBody();
+        // if(response.getStatusCode().isError()){
+        //     return;
+        // }
+        // List<ItemDTO> items = response.getBody();
+
+        List<ItemDTO> items = itemClient.queryItemByIds(itemIds);
+        
         if (CollUtils.isEmpty(items)) {
             return;
         }
