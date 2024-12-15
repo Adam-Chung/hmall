@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hmall.item.domain.dto.ItemDTO;
-import com.hmall.item.domain.dto.OrderDetailDTO;
+import com.hmall.api.dto.ItemDTO;
+import com.hmall.api.dto.OrderDetailDTO;
 import com.hmall.item.domain.po.Item;
 
 /**

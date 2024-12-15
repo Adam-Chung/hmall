@@ -16,7 +16,7 @@ import com.hmall.user.domain.vo.UserLoginVO;
 import com.hmall.user.enums.UserStatus;
 import com.hmall.user.mapper.UserMapper;
 import com.hmall.user.service.IUserService;
-import com.hmall.user.utils.JwtTool;
+import com.hmall.user.util.JwtTool;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

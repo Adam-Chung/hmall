@@ -1,13 +1,13 @@
 package com.hmall.user.config;
 
-import java.security.KeyPair;
-
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+
+import java.security.KeyPair;
 
 @Configuration
 @EnableConfigurationProperties(JwtProperties.class)

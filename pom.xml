@@ -25,6 +25,9 @@
     <module>cart-service</module>
     <module>user-service</module>
     <module>hm-api</module>
+    <module>user-service</module>
+    <module>trade-service</module>
+    <module>pay-service</module>
       
   </modules>
       
