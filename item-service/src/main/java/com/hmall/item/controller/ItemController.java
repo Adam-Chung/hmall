@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,11 @@ public class ItemController {
 
     @ApiOperation("分页查询商品")
     @GetMapping("/page")
-    public PageDTO<ItemDTO> queryItemByPage(PageQuery query) {
+    public PageDTO<ItemDTO> queryItemByPage(PageQuery query, 
+    @RequestHeader (value = "testHeader", required = false) String header) {
+
+        System.out.println("header: " + header);
+
         // 1.分页查询
         Page<Item> result = itemService.page(query.toMpPage("update_time", false));
         // 2.封装并返回
