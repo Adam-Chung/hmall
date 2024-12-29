@@ -8,7 +8,8 @@ spring:
       server-addr: 192.168.111.128:8848
     gateway:
       default-filters:
-      - AddRequestHeader=testHeader, you are so handsome # 全局過濾器，以下所有id都會有此過濾器作用
+      - AddRequestHeader=testHeader, you are so handsome # 全局過濾器，以下所有id都會有此過濾器作用 # for Demo 
+      - PrintAny=1,2,3 # for Demo 
       routes:
         - id: item-service
           uri: lb://item-service
@@ -32,3 +33,16 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/addresses/**,/users/**
+
+hm:
+  jwt:
+    location: classpath:hmall.jks
+    alias: hmall
+    password: hmall123
+    tokenTTL: 30m
+  auth:
+    excludePaths:  #放行路徑
+      - /search/**
+      - /users/login
+      - /items/**
+      - /hi
