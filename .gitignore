@@ -26,7 +26,5 @@ hmall.code-workspace
 .vscode/launch.json
 .vscode/settings.json
 *.gz
-hm-gateway/target/classes/application.yaml
-hm-gateway/target/classes/hmall.jks
-hm-service/target/classes/application.yaml
-user-service/target/classes/application.yaml
+target/
+logs/
