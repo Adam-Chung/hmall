@@ -1,11 +1,12 @@
 package com.hmall.api.config;
 
-import feign.Logger;
-import feign.RequestInterceptor;
-
 import org.springframework.context.annotation.Bean;
 
+import com.hmall.api.client.fallback.ItemClientFallbackFactory;
 import com.hmall.common.utils.UserContext;
+
+import feign.Logger;
+import feign.RequestInterceptor;
 
 public class DefaultFeignConfig {
     @Bean
@@ -24,6 +25,11 @@ public class DefaultFeignConfig {
                 // 2. 將用戶訊息放到request header中
             }
         };
+    }
+
+    @Bean
+    public ItemClientFallbackFactory itemClientFallbackFactory(){
+        return new ItemClientFallbackFactory();
     }
 
 }

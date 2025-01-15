@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.hmall.api.client.fallback.ItemClientFallbackFactory;
 import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
 
 
-@FeignClient("item-service")
+@FeignClient(value = "item-service", fallbackFactory = ItemClientFallbackFactory.class)
 public interface ItemClient {
 
     @GetMapping("/items")
