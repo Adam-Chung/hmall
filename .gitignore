@@ -28,3 +28,4 @@ hmall.code-workspace
 *.gz
 target/
 logs/
+**/target/
