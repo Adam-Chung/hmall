@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.api.client.CartClient;
@@ -17,6 +17,7 @@ import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
 import com.hmall.common.exception.BadRequestException;
 import com.hmall.common.utils.UserContext;
+import com.hmall.trade.constants.MQconstants;
 import com.hmall.trade.domain.dto.OrderFormDTO;
 import com.hmall.trade.domain.po.Order;
 import com.hmall.trade.domain.po.OrderDetail;
@@ -44,6 +45,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final ItemClient itemClient;
 
     private final CartClient cartClient;
+
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     @GlobalTransactional
@@ -87,6 +90,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         } catch (Exception e) {
             throw new RuntimeException("库存不足！");
         }
+
+        // 5.發送延遲消息 檢測訂單支付狀態
+        rabbitTemplate.convertAndSend(MQconstants.DELAY_EXCHANGE_NAME, MQconstants.DELAY_ORDER_KEY, order.getId(), message -> {
+            message.getMessageProperties().setDelay(1000 * 60 * 15); //因為有插件了，所以是用setDelay
+            return message;
+        });
+
         return order.getId();
     }
 
@@ -113,5 +123,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             details.add(detail);
         }
         return details;
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        // TODO Auto-generated method stub
+        // - 將訂單狀態修改為已關閉
+        //- 恢復訂單中已經扣除的庫存
     }
 }
