@@ -1,2 +1,2 @@
 # hmall
-a online shopping mall
+An online shopping mall for practice
